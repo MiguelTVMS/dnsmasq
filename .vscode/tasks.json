@@ -1,0 +1,60 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "docker-build",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "type": "shell",
+            "command": "docker",
+            "args": [
+                "buildx",
+                "build",
+                "--no-cache",
+                "-f",
+                "./.docker/Dockerfile",
+                "-t",
+                "ghcr.io/migueltvms/dnsmasq:dev",
+                "."
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "docker-run",
+            "dependsOn":[
+                "docker-build"
+            ],
+            "type": "shell",
+            "command": "docker",
+            "args": [
+                "run",
+                "-it",
+                "--rm",
+                "-p",
+                "53:53/udp",
+                "--hostname",
+                "dnsmasq-server",
+                "--dns",
+                "1.1.1.1",
+                "--dns",
+                "8.8.8.8",
+                "--add-host",
+                "testresolv:88.88.88.88",
+                "--add-host",
+                "testresolv.com:89.89.89.89",
+                "ghcr.io/migueltvms/dnsmasq:dev",
+                // "--bogus-priv",
+                // "--no-resolv",
+                // "--strict-order",
+                "--log-queries",
+                "--log-debug",
+                "--log-facility=-",
+            ],
+            "problemMatcher": []
+        }
+    ]
+}
