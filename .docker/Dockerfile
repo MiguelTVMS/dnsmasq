@@ -5,7 +5,8 @@ FROM alpine:${ALPINE_VERSION}
 
 RUN apk update && \
     apk upgrade && \
-    apk add dnsmasq=${DNSMASQ_VERSION}
+    apk add dnsmasq=${DNSMASQ_VERSION} && \
+    rm -rf /var/cache/apk/*
 
 EXPOSE 53/udp
 
